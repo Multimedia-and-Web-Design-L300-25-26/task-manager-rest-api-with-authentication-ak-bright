@@ -1,14 +1,7 @@
-import express from "express";
 import Task from "../models/Task.js";
-import authMiddleware from "../middleware/authMiddleware.js";
 
-const router = express.Router();
-
-// Apply auth middleware
-router.use(authMiddleware);
-
-// POST /api/tasks
-router.post("/", async (req, res) => {
+// Create a new task
+export const createTask = async (req, res) => {
   try {
     const { title, description, completed } = req.body;
 
@@ -31,10 +24,10 @@ router.post("/", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
-});
+};
 
-// GET /api/tasks
-router.get("/", async (req, res) => {
+// Get all tasks for the authenticated user
+export const getTasks = async (req, res) => {
   try {
     // Return only tasks belonging to req.user
     const tasks = await Task.find({ owner: req.user._id });
@@ -42,10 +35,10 @@ router.get("/", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
-});
+};
 
-// DELETE /api/tasks/:id
-router.delete("/:id", async (req, res) => {
+// Delete a task by ID
+export const deleteTask = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
 
@@ -66,6 +59,4 @@ router.delete("/:id", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
-});
-
-export default router;
+};
